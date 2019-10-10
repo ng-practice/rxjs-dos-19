@@ -3,6 +3,15 @@
   [isShown]="showReload$ | async"
   (reload)="update$$.next()"
 ></dos-todo-updater>
+
+<input
+  #todoTextInput
+  type="text"
+  class="todo__input"
+  placeholder="Filter todos"
+  (input)="filter$$.next(todoTextInput.value)"
+/>
+
 <main class="todo__app">
   <ng-container *ngIf="todos$ | async as todos; else loadingIndicator">
     <dos-todo-counter

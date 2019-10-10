@@ -1,8 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { merge, Observable, Subject } from 'rxjs';
+import { combineLatest, merge, Observable, Subject } from 'rxjs';
 import { Todo } from './models';
 import { TodoService } from './todo.service';
-import { first, map, mapTo, skip, withLatestFrom } from 'rxjs/operators';
+import {
+  first,
+  map,
+  mapTo,
+  skip,
+  startWith,
+  switchMap,
+  withLatestFrom
+} from 'rxjs/operators';
 
 @Component({
   selector: 'dos-todos',
@@ -14,7 +22,9 @@ export class TodosComponent implements OnInit {
   todosInitial$: Observable<Todo[]>;
   todosMostRecent$: Observable<Todo[]>;
 
+  filter$$ = new Subject<string>();
   update$$ = new Subject();
+  refresh$: Observable<string>;
   show$: Observable<boolean>;
   hide$: Observable<boolean>;
   showReload$: Observable<boolean>;
@@ -23,12 +33,27 @@ export class TodosComponent implements OnInit {
 
   ngOnInit(): void {
     this.todosInitial$ = this.todosSource$.pipe(first());
-    this.todosMostRecent$ = this.update$$.pipe(
+
+    this.refresh$ = combineLatest([
+      this.update$$.pipe(
+        startWith(''),
+        mapTo('')
+      ),
+      this.filter$$
+    ]).pipe(map(([button, filter]) => (filter ? filter : button)));
+
+    this.refresh$.subscribe(console.log);
+    this.todosMostRecent$ = this.refresh$.pipe(
       withLatestFrom(this.todosSource$),
-      map(([, todos]) => todos)
+      map(([filter, todos]) =>
+        filter.length > 1
+          ? todos.filter(todo => todo.text.includes(filter))
+          : todos
+      )
     );
 
     this.todos$ = merge(this.todosInitial$, this.todosMostRecent$);
+
     this.show$ = this.todosSource$.pipe(
       skip(1),
       mapTo(true)
