@@ -7,6 +7,7 @@ import {
   map,
   retryWhen,
   share,
+  switchMap,
   tap
 } from 'rxjs/operators';
 import { Toolbelt } from './internals';
@@ -25,10 +26,16 @@ export class TodoService {
 
   loadFrequently() {
     // TODO: Introduce error handled, configured, recurring, all-mighty stream
-    return timer(0, 5000).pipe(
-      exhaustMap(() => this.query().pipe(catchError(() => EMPTY))),
-      retryWhen(() => timer(1000)),
-      tap({ error: () => this.toolbelt.offerHardReload() }),
+    return this.settings.settings$.pipe(
+      switchMap(settings =>
+        settings.isPollingEnabled
+          ? timer(0, settings.pollingInterval).pipe(
+              exhaustMap(() => this.query().pipe(catchError(() => EMPTY))),
+              retryWhen(() => timer(1000)),
+              tap({ error: () => this.toolbelt.offerHardReload() })
+            )
+          : this.query()
+      ),
       share()
     );
   }
