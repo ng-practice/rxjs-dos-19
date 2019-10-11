@@ -1,7 +1,9 @@
-import { Observable } from 'rxjs';
+import { Observable, timer } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 // task1()
-task2();
+//task2();
+task3();
 
 function task1() {
   const stream$ = new Observable(observer => {
@@ -36,4 +38,9 @@ function task2() {
   });
 
   setTimeout(() => subscription.unsubscribe(), 5000);
+}
+
+function task3() {
+  const stream$ = timer(3000, 1000);
+  stream$.pipe(takeUntil(timer(5000))).subscribe(count => console.log(count));
 }
