@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Todo, TodoApi } from './models';
-import { map, tap } from 'rxjs/operators';
+import { map, share, tap } from 'rxjs/operators';
 import { Toolbelt } from './internals';
+import { Todo, TodoApi } from './models';
 import { TodoSettings } from './todo-settings.service';
 
 const todosUrl = 'http://localhost:3333/api';
@@ -28,7 +28,10 @@ export class TodoService {
       this.http
         .get<TodoApi[]>(`${todosUrl}`)
         // TODO: apply mapping to fix display of tasks
-        .pipe(map(todos => todos.map(todo => this.toolbelt.deserialize(todo))))
+        .pipe(
+          map(todos => todos.map(todo => this.toolbelt.deserialize(todo))),
+          share()
+        )
     );
   }
 
