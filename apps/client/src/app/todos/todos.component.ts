@@ -22,16 +22,21 @@ export class TodosComponent implements OnInit {
   constructor(private todosService: TodoService) {}
 
   ngOnInit(): void {
+    this.initializeTodos();
+    this.showReloadOnUpdates();
+  }
+
+  private initializeTodos() {
     this.todosInitial$ = this.todosSource$.pipe(first());
     this.todos$ = this.todosSource$;
-
     this.todosMostRecent$ = this.update$$.pipe(
       withLatestFrom(this.todosSource$),
       map(([, todos]) => todos)
     );
-
     this.todos$ = merge(this.todosInitial$, this.todosMostRecent$);
+  }
 
+  private showReloadOnUpdates() {
     this.show$ = this.todosSource$.pipe(
       skip(1),
       mapTo(true)
