@@ -74,7 +74,7 @@
     "eslint": "6.1.0",
     "jest": "24.1.0",
     "jest-preset-angular": "7.0.0",
-    "nodemon": "1.19.3",
+    "nodemon": "2.0.20",
     "prettier": "1.18.2",
     "ts-jest": "24.0.0",
     "ts-node": "8.4.1",
