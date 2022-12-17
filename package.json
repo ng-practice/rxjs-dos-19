@@ -43,7 +43,7 @@
     "@angular/platform-browser-dynamic": "8.2.9",
     "@angular/router": "8.2.9",
     "@nestjs-addons/in-memory-db": "1.7.4",
-    "@nestjs/common": "6.8.2",
+    "@nestjs/common": "9.2.1",
     "@nestjs/core": "6.8.2",
     "@nestjs/platform-express": "6.8.2",
     "@nrwl/angular": "8.6.0",
