@@ -44,7 +44,7 @@
     "@angular/router": "8.2.9",
     "@nestjs-addons/in-memory-db": "1.7.4",
     "@nestjs/common": "6.8.2",
-    "@nestjs/core": "6.8.2",
+    "@nestjs/core": "9.0.5",
     "@nestjs/platform-express": "6.8.2",
     "@nrwl/angular": "8.6.0",
     "core-js": "2.5.4",
